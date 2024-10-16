@@ -30,4 +30,4 @@ jobs:
   
     - name: Push Docker image to GCR
       run: |
-        docker europe-west3-docker.pkg.dev/galvanic-cirrus-437510-m8/test-repo/simple-app:${{ github.sha }}
+        docker push europe-west3-docker.pkg.dev/galvanic-cirrus-437510-m8/test-repo/simple-app:${{ github.sha }}
