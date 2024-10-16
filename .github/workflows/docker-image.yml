@@ -10,6 +10,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag simple-app:$(date +%s)
+    - name: Checkout code
+      uses: actions/checkout@v4
+ 
+    - name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@v1
+      with:
+        version: 'latest'
+        service_account_key: ${{ secrets.GCP_SA_KEY }}
+        export_default_credentials: true
+
+    - name: Configure Docker to use gcloud as a credential helper
+      run: |
+        gcloud auth configure-docker
+
+    - name: Build Docker image
+      run: |
+        docker build -t europe-west3-docker.pkg.dev/galvanic-cirrus-437510-m8/test-repo/simple-app:${{ github.sha }} .
+  
+    - name: Push Docker image to GCR
+      run: |
+        docker europe-west3-docker.pkg.dev/galvanic-cirrus-437510-m8/test-repo/simple-app:${{ github.sha }}
