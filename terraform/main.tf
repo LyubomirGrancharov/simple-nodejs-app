@@ -2,10 +2,10 @@ resource "google_container_cluster" "primary" {
   name     = "small-gke-cluster"
   location = "us-central1-a"
 
-  initial_node_count = 1  
-
+  initial_node_count = 1 
+  
   node_config {
-    machine_type = "e2-medium" 
+    machine_type = "e2-medium"
     oauth_scopes = [
       "https://www.googleapis.com/auth/devstorage.read_only",
       "https://www.googleapis.com/auth/logging.write",
@@ -16,15 +16,20 @@ resource "google_container_cluster" "primary" {
     ]
   }
 
+ 
   remove_default_node_pool = true
-  initial_node_pool {
-    name = "default-node-pool"
-    node_count = 1
-
-    node_config {
-      machine_type = "e2-small"
-      disk_size_gb = 20  
-    }
-  }
-
 }
+
+resource "google_container_node_pool" "primary_nodes" {
+  cluster    = google_container_cluster.primary.name
+  location   = google_container_cluster.primary.location
+  name       = "default-node-pool"
+  node_count = 1
+
+  node_config {
+    machine_type = "e2-small"
+    disk_size_gb = 20 
+  }
+}
+
+
