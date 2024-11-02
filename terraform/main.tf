@@ -1,6 +1,7 @@
 resource "google_container_cluster" "primary" {
   name     = "small-gke-cluster"
   location = "us-central1-a"
+  deletion_protection = false
 
   initial_node_count = 1 
   
